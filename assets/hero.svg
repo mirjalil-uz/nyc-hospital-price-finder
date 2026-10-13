@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img"
+     aria-label="Know the price before you go. Animated illustration of a hospital in the New York skyline with an ambulance driving past.">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cfe4ff"/>
+      <stop offset="0.7" stop-color="#eaf3ff"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <clipPath id="card"><rect width="1200" height="320" rx="24"/></clipPath>
+    <g id="cloud" fill="#ffffff">
+      <ellipse cx="0" cy="0" rx="46" ry="14"/><ellipse cx="34" cy="-10" rx="34" ry="13"/>
+      <ellipse cx="-30" cy="-6" rx="26" ry="10"/>
+    </g>
+  </defs>
+  <g clip-path="url(#card)">
+    <rect width="1200" height="320" fill="url(#sky)"/>
+
+    <!-- sun with a slow glow -->
+    <circle cx="1090" cy="66" r="50" fill="#ffe6ad" opacity="0.5">
+      <animate attributeName="r" values="46;58;46" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1090" cy="66" r="34" fill="#ffd27a"/>
+
+    <!-- drifting clouds -->
+    <g opacity="0.95">
+      <use href="#cloud" y="56"><animateTransform attributeName="transform" type="translate"
+           from="560 0" to="1300 0" dur="60s" repeatCount="indefinite"/></use>
+      <use href="#cloud" y="104"><animateTransform attributeName="transform" type="translate"
+           from="-120 0" to="1300 0" dur="95s" repeatCount="indefinite"/></use>
+      <use href="#cloud" y="34"><animateTransform attributeName="transform" type="translate"
+           from="200 0" to="1300 0" dur="80s" repeatCount="indefinite"/></use>
+    </g>
+
+    <!-- skyline -->
+    <g fill="#b7d3f6">
+      <rect x="610" y="160" width="46" height="130"/><rect x="664" y="126" width="38" height="164"/>
+      <rect x="712" y="172" width="52" height="118"/><rect x="1040" y="146" width="44" height="144"/>
+      <rect x="1092" y="176" width="60" height="114"/><rect x="1160" y="136" width="40" height="154"/>
+      <rect x="681" y="90" width="4" height="36"/>
+    </g>
+    <g fill="#86b6ef">
+      <rect x="566" y="198" width="48" height="92"/><rect x="772" y="188" width="42" height="102"/>
+      <rect x="1000" y="202" width="46" height="88"/><rect x="1125" y="212" width="50" height="78"/>
+    </g>
+
+    <!-- hospital -->
+    <rect x="850" y="112" width="140" height="178" rx="6" fill="#ffffff" stroke="#9ec5f4" stroke-width="3"/>
+    <rect x="826" y="182" width="188" height="108" rx="6" fill="#ffffff" stroke="#9ec5f4" stroke-width="3"/>
+    <circle cx="920" cy="150" r="24" fill="#2a78d6">
+      <animate attributeName="r" values="24;26.5;24" dur="1.6s" repeatCount="indefinite"/>
+    </circle>
+    <rect x="914" y="135" width="12" height="30" rx="2" fill="#ffffff"/>
+    <rect x="905" y="144" width="30" height="12" rx="2" fill="#ffffff"/>
+    <g fill="#cde2fb">
+      <rect x="842" y="198" width="22" height="20" rx="3"/>
+      <rect x="874" y="198" width="22" height="20" rx="3">
+        <animate attributeName="fill" values="#cde2fb;#ffe6ad;#cde2fb" dur="7s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="944" y="198" width="22" height="20" rx="3"/>
+      <rect x="976" y="198" width="22" height="20" rx="3">
+        <animate attributeName="fill" values="#cde2fb;#cde2fb;#ffe6ad;#cde2fb" dur="9s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="842" y="230" width="22" height="20" rx="3">
+        <animate attributeName="fill" values="#ffe6ad;#cde2fb;#ffe6ad" dur="11s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="874" y="230" width="22" height="20" rx="3"/>
+      <rect x="944" y="230" width="22" height="20" rx="3"/>
+      <rect x="976" y="230" width="22" height="20" rx="3"/>
+    </g>
+    <rect x="906" y="244" width="28" height="46" rx="3" fill="#2a78d6"/>
+    <g fill="#1baf7a">
+      <circle cx="806" cy="276" r="14"/><circle cx="1030" cy="278" r="12"/><circle cx="1052" cy="282" r="9"/>
+    </g>
+
+    <!-- road -->
+    <rect x="0" y="290" width="1200" height="30" fill="#dbe7f6"/>
+    <g fill="#ffffff">
+      <rect x="40" y="303" width="60" height="4" rx="2"/><rect x="200" y="303" width="60" height="4" rx="2"/>
+      <rect x="360" y="303" width="60" height="4" rx="2"/><rect x="520" y="303" width="60" height="4" rx="2"/>
+      <rect x="680" y="303" width="60" height="4" rx="2"/><rect x="840" y="303" width="60" height="4" rx="2"/>
+      <rect x="1000" y="303" width="60" height="4" rx="2"/><rect x="1160" y="303" width="60" height="4" rx="2"/>
+    </g>
+
+    <!-- ambulance driving past -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="-160 0" to="1260 0"
+                        dur="16s" repeatCount="indefinite"/>
+      <rect x="0" y="262" width="92" height="40" rx="6" fill="#ffffff" stroke="#9ec5f4" stroke-width="2"/>
+      <path d="M92 274 h26 l14 14 v14 h-40 z" fill="#ffffff" stroke="#9ec5f4" stroke-width="2"/>
+      <path d="M98 278 h18 l9 9 h-27 z" fill="#b7d3f6"/>
+      <rect x="0" y="286" width="132" height="6" fill="#2a78d6"/>
+      <rect x="40" y="267" width="8" height="18" rx="1.5" fill="#e34948"/>
+      <rect x="35" y="272" width="18" height="8" rx="1.5" fill="#e34948"/>
+      <rect x="60" y="254" width="14" height="8" rx="3" fill="#e34948">
+        <animate attributeName="fill" values="#e34948;#2a78d6;#e34948" dur="0.7s" repeatCount="indefinite"/>
+      </rect>
+      <circle cx="28" cy="304" r="10" fill="#0d366b"/><circle cx="28" cy="304" r="4" fill="#cde2fb"/>
+      <circle cx="106" cy="304" r="10" fill="#0d366b"/><circle cx="106" cy="304" r="4" fill="#cde2fb"/>
+    </g>
+
+    <!-- headline -->
+    <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+      <text x="56" y="92" font-size="50" font-weight="700" fill="#0d366b">Know the price</text>
+      <text x="56" y="148" font-size="50" font-weight="700" fill="#0d366b">before you go</text>
+      <text x="58" y="190" font-size="20" fill="#184f95">Compare what New York City hospitals really charge</text>
+      <text x="58" y="216" font-size="20" fill="#184f95">for the same care, using their own published prices.</text>
+    </g>
+
+    <!-- heartbeat line that draws itself -->
+    <path d="M58 256 h70 l9 -7 l8 7 h18 l8 -26 l11 46 l9 -20 h46 l9 -7 l8 7 h18 l8 -26 l11 46 l9 -20 h60"
+          fill="none" stroke="#e34948" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+          stroke-dasharray="620" stroke-dashoffset="620">
+      <animate attributeName="stroke-dashoffset" values="620;0;0;620" keyTimes="0;0.55;0.85;1" dur="4s"
+               repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>

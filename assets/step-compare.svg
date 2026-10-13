@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" role="img" aria-label="Price bars of different lengths growing side by side">
+  <rect width="240" height="150" rx="18" fill="#eaf3ff"/>
+  <g fill="#9ec5f4">
+    <circle cx="52" cy="42" r="9"/><circle cx="52" cy="75" r="9"/><circle cx="52" cy="108" r="9"/>
+  </g>
+  <g fill="#ffffff" font-family="system-ui, 'Segoe UI', sans-serif" font-size="11" font-weight="700" text-anchor="middle">
+    <text x="52" y="46">H</text><text x="52" y="79">H</text><text x="52" y="112">H</text>
+  </g>
+  <rect x="72" y="33" height="18" rx="4" fill="#2a78d6" width="46">
+    <animate attributeName="width" values="0;46;46;0" keyTimes="0;0.3;0.9;1" dur="5s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="72" y="66" height="18" rx="4" fill="#2a78d6" width="92">
+    <animate attributeName="width" values="0;92;92;0" keyTimes="0;0.4;0.9;1" dur="5s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="72" y="99" height="18" rx="4" fill="#2a78d6" width="140">
+    <animate attributeName="width" values="0;140;140;0" keyTimes="0;0.5;0.9;1" dur="5s" repeatCount="indefinite"/>
+  </rect>
+</svg>

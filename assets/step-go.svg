@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" role="img" aria-label="A map pin bouncing on a route to a hospital">
+  <rect width="240" height="150" rx="18" fill="#eaf3ff"/>
+  <path d="M34 118 C 70 60, 110 132, 150 84 S 196 70, 206 96" fill="none" stroke="#9ec5f4" stroke-width="5"
+        stroke-linecap="round" stroke-dasharray="2 12"/>
+  <circle cx="34" cy="118" r="7" fill="#1baf7a"/>
+  <ellipse cx="206" cy="104" rx="12" ry="4" fill="#9ec5f4">
+    <animate attributeName="rx" values="12;7;12" dur="1.4s" repeatCount="indefinite"/>
+  </ellipse>
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -14; 0 0" dur="1.4s"
+                      repeatCount="indefinite"/>
+    <path d="M206 100 c -20 -24 -18 -48 0 -48 c 18 0 20 24 0 48 z" fill="#2a78d6"/>
+    <rect x="202.500" y="61" width="7" height="19" rx="1.500" fill="#ffffff"/>
+    <rect x="196.500" y="67" width="19" height="7" rx="1.500" fill="#ffffff"/>
+  </g>
+</svg>

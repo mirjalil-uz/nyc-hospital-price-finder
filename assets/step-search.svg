@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" role="img" aria-label="A magnifying glass moving over a list of services">
+  <rect width="240" height="150" rx="18" fill="#eaf3ff"/>
+  <rect x="56" y="24" width="128" height="102" rx="10" fill="#ffffff" stroke="#9ec5f4" stroke-width="2"/>
+  <g fill="#cde2fb">
+    <rect x="72" y="42" width="96" height="10" rx="5"/><rect x="72" y="62" width="70" height="10" rx="5"/>
+    <rect x="72" y="82" width="86" height="10" rx="5"/><rect x="72" y="102" width="56" height="10" rx="5"/>
+  </g>
+  <g fill="none" stroke="#2a78d6" stroke-width="6" stroke-linecap="round">
+    <animateTransform attributeName="transform" type="translate" values="0 0; 26 22; -8 40; 0 0" dur="6s"
+                      repeatCount="indefinite"/>
+    <circle cx="120" cy="58" r="20" fill="#ffffff" fill-opacity="0.55"/>
+    <path d="M135 73 l18 18"/>
+  </g>
+</svg>

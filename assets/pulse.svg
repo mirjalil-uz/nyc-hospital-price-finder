@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 36" role="img" aria-label="Heartbeat line divider">
+  <path d="M0 18 h380 l10 -6 l9 6 h22 l9 -16 l12 30 l10 -14 h60 l10 -6 l9 6 h22 l9 -16 l12 30 l10 -14 h606"
+        fill="none" stroke="#9ec5f4" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle r="4" fill="#2a78d6">
+    <animateMotion dur="7s" repeatCount="indefinite"
+      path="M0 18 h380 l10 -6 l9 6 h22 l9 -16 l12 30 l10 -14 h60 l10 -6 l9 6 h22 l9 -16 l12 30 l10 -14 h606"/>
+  </circle>
+</svg>

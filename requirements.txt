@@ -1,0 +1,6 @@
+duckdb
+ijson
+pandas
+pyarrow
+requests
+streamlit

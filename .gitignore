@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+# Raw downloads and the database live outside the repository, in ~/nyc-hospital-data
+*.duckdb
+*.parquet
+data/raw/
