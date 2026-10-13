@@ -75,6 +75,11 @@ STYLE = """
   .st-key-results h2 { color: #0d366b; }
   .st-key-list-section h3, .st-key-faq-section h3 { color: #3a2d8a; }
   .st-key-hospital-card h3 { color: #a8431a; }
+  /* The recommendation is the answer to the person's question, so it is the most prominent thing in the results. */
+  .st-key-recommendation { background: linear-gradient(135deg, #fff1bf 0%, #ffffff 75%); border: 2px solid #eda100;
+        border-left: 10px solid #eda100; border-radius: 18px; padding: 1.2rem 1.5rem 1.4rem;
+        box-shadow: 0 8px 22px rgba(237, 161, 0, 0.22); margin-bottom: 0.6rem; }
+  .st-key-recommendation h3 { font-size: 1.9rem !important; color: #0d366b !important; }
   /* Step 1 must be impossible to miss: a framed, softly glowing card with a large dropdown. */
   @keyframes glow { 0%, 100% { box-shadow: 0 8px 24px rgba(42, 120, 214, 0.18); }
                     50% { box-shadow: 0 8px 34px rgba(42, 120, 214, 0.45); } }
@@ -282,6 +287,67 @@ def far_below_the_rest(prices):
     if prices.notna().sum() < 5:
         return pd.Series(False, index=prices.index)
     return (prices < prices.median() * UNUSUALLY_LOW).fillna(False)
+
+
+# Hospitals that serve one kind of patient. They stay in the list, but are not recommended to
+# everyone automatically: a children's hospital is the wrong suggestion for most adults.
+SPECIALISED = ("Children", "Behavioral", "Zucker Hillside", "Calvary", "Henry J. Carter", "Eye and Ear",
+               "Memorial Sloan Kettering")
+
+
+def rank_options(results, with_insurance, with_distance):
+    """Hospitals in order of recommendation, one row per price list.
+
+    Each hospital is placed among the others on three things: what the person would pay, how
+    patients rate it and how far away it is. Its place on each (0 = worst, 1 = best) is blended:
+    cost counts for half, rating for three tenths and distance for two tenths, or cost for six
+    tenths and rating for four when no ZIP code was given. Places are used instead of raw numbers
+    so that one extremely expensive hospital cannot make every other price look alike.
+    Prices flagged as unusually low are left out, and so are hospitals with no price to compare.
+    Hospitals for one kind of patient (children's, psychiatric, cancer, long-term care) are left out
+    whenever a general hospital is available.
+    """
+    pool = results.copy()
+    if with_insurance:
+        pool["cost"] = pool.you_pay.where(pool.covered & ~pool.insurer_odd)
+    else:
+        pool["cost"] = pool.cash_compare.where(~pool.cash_odd)
+    pool = pool.dropna(subset=["cost"])
+    general = pool[~pool.hospital.str.contains("|".join(SPECIALISED))]
+    if not general.empty:
+        pool = general.copy()
+    if pool.empty:
+        return pool
+    pool["cost_place"] = 1 - pool.cost.rank(pct=True, method="min") + 1 / len(pool)
+    # A hospital with no patient rating is treated as average, neither rewarded nor punished.
+    pool["rating_place"] = pool.patient_recommend_pct.rank(pct=True).fillna(0.5)
+    if with_distance:
+        pool["distance_place"] = 1 - pool.miles.rank(pct=True, method="min") + 1 / len(pool)
+        pool["score"] = 0.5 * pool.cost_place + 0.3 * pool.rating_place + 0.2 * pool.distance_place
+    else:
+        pool["score"] = 0.6 * pool.cost_place + 0.4 * pool.rating_place
+    pool = pool.sort_values(["score", "cost"], ascending=[False, True])
+    return pool.drop_duplicates("file_id")
+
+
+def reasons_for(row, pool, cost_words):
+    """Short plain reasons why a hospital ranks where it does."""
+    reasons = []
+    middle = pool.cost.median()
+    if row.cost <= pool.cost.min():
+        reasons.append(f"{cost_words} is the lowest of the {len(pool)} hospitals compared: {money(row.cost)}")
+    elif row.cost < middle:
+        reasons.append(f"{cost_words} is {money(middle - row.cost)} below the middle of the hospitals compared")
+    else:
+        reasons.append(f"{cost_words} is {money(row.cost)}, close to or above the middle ({money(middle)})")
+    if pd.notna(row.patient_stars):
+        reasons.append(f"Patients rate it {int(row.patient_stars)} of 5 stars, and "
+                       f"{int(row.patient_recommend_pct)}% would definitely recommend it")
+    else:
+        reasons.append("Medicare has no patient rating for it")
+    if pd.notna(row.miles):
+        reasons.append(f"It is about {row.miles:.1f} miles from you")
+    return reasons
 
 
 def is_old(file_date):
@@ -561,7 +627,8 @@ def pick_card(column, badge, row, headline):
         st.caption(badge)
         st.markdown(f"**{row.hospital}**")
         st.markdown(f"### {md(headline)}")
-        st.write(f"{stars(row.patient_stars)} · {row.borough}")
+        where = f"{row.miles:.1f} mi" if pd.notna(row.get("miles", float("nan"))) else row.borough
+        st.write(f"{stars(row.patient_stars)} · {where}")
         st.button("See details", key=f"pick-{badge}", on_click=choose_hospital, args=(row.hospital,),
                   width="stretch")
 
@@ -883,6 +950,61 @@ with st.container(key="results"):
         st.stop()
 
     with_cash = results[~results.cash_odd].dropna(subset=["cash_compare"]).sort_values("cash_compare")
+
+    # One clear answer first; the numbers and the full list follow for anyone who wants to check it.
+    ranked = rank_options(results, bool(payer), bool(home))
+    insured = bool(payer) and not ranked.empty
+    if ranked.empty:
+        ranked = rank_options(results, False, bool(home))
+    if not ranked.empty:
+        best = ranked.iloc[0]
+        cost_words = "What you would pay" if insured else "The cash price"
+        with st.container(key="recommendation"):
+            st.markdown(f":orange[**{tr('🏆 Your best option')}**]")
+            st.subheader(f"🏆 {best.hospital}")
+            figure = st.columns(3)
+            figure[0].metric("Your cost (estimate)" if insured else "Cash price here", money(best.cost))
+            figure[1].metric("Patients say", "not rated" if pd.isna(best.patient_stars)
+                             else f"{stars(best.patient_stars)}  {int(best.patient_recommend_pct)}% recommend")
+            figure[2].metric("How far", f"{best.miles:.1f} miles" if pd.notna(best.miles) else best.borough)
+            st.markdown("**Why this one**")
+            for reason in reasons_for(best, ranked, cost_words):
+                st.markdown(f"- {md(reason)}")
+            action = st.columns(3)
+            action[0].button("See details", key="recommended", type="primary", width="stretch",
+                             on_click=choose_hospital, args=(best.hospital,))
+            if best.phone:
+                digits = "".join(c for c in best.phone if c.isdigit())
+                action[1].link_button(f"📞 Call {best.phone}", f"tel:+1{digits}", width="stretch")
+            if best.address:
+                destination = quote_plus(f"{best.hospital}, {best.address}")
+                action[2].link_button("🧭 Get directions",
+                                      f"https://www.google.com/maps/dir/?api=1&destination={destination}",
+                                      width="stretch")
+            st.caption(
+                "Chosen by weighing cost first, then patient rating"
+                + (", then distance. " if home else ". Enter your ZIP code above to take distance into account. ")
+                + ("" if insured or not payer else f"No hospital lists a {payer} price for this, so cash prices "
+                   "were compared. ")
+                + "Children's, psychiatric, cancer and long-term care hospitals are not suggested automatically. "
+                "It is a suggestion to start from, not medical advice."
+            )
+        runners = ranked.iloc[1:3]
+        if len(runners):
+            st.markdown("**Two other good options**" if len(runners) == 2 else "**Another good option**")
+            places = st.columns(2)
+            for column, badge, (_, row) in zip(places, ("🥈 Second choice", "🥉 Third choice"), runners.iterrows()):
+                pick_card(column, badge, row, f"{'You pay about' if insured else 'Cash price'} {money(row.cost)}")
+        with st.expander("📝 Questions to ask the hospital before you go"):
+            st.markdown(
+                "- Is this the total price, or will there be separate bills, such as a doctor's fee?\n"
+                "- Are you in my insurance plan's network for this service?\n"
+                "- What will I owe on the day, and can I pay in instalments?\n"
+                "- If I pay myself, is there a discount or financial assistance I can apply for?\n"
+                "- Do I need a referral or prior approval from my insurer?"
+            )
+
+    st.markdown("**The numbers behind it**")
     left, middle, right = st.columns(3)
     left.metric("Hospitals with a price", len(results))
     if len(with_cash):
@@ -913,25 +1035,6 @@ with st.container(key="results"):
             "billing code. They are compared on their higher price, because the low line often covers only part of "
             "the service, such as the doctor's fee."
         )
-
-    # Three quick suggestions before the full list.
-    rated = results.dropna(subset=["patient_stars"]).sort_values(
-        ["patient_stars", "patient_recommend_pct", "cash_compare"], ascending=[False, False, True]
-    )
-    good_value = with_cash[with_cash.patient_stars >= 3]
-    cards = st.columns(3)
-    if len(rated):
-        top = rated.iloc[0]
-        pick_card(cards[0], "⭐ Highest patient rating", top, f"{int(top.patient_recommend_pct)}% recommend")
-    in_network = results[results.covered & ~results.insurer_odd].sort_values("you_pay")
-    if payer and len(in_network):
-        pick_card(cards[1], f"💳 Lowest cost with {payer}", in_network.iloc[0],
-                  f"You pay about {money(in_network.iloc[0].you_pay)}")
-    elif len(with_cash):
-        pick_card(cards[1], "💵 Lowest cash price", with_cash.iloc[0], money(with_cash.iloc[0].cash_compare))
-    if len(good_value):
-        pick_card(cards[2], "⚖️ Best value (3+ stars, lowest price)", good_value.iloc[0],
-                  money(good_value.iloc[0].cash_compare))
 
 with st.container(key="list-section"):
     st.subheader("All hospitals for this service")

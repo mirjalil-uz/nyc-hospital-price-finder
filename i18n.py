@@ -189,6 +189,32 @@ ES = {
         "Cada punto es un hospital con precio para este servicio. Haga clic en un punto para ver sus detalles; el "
         "punto naranja es el hospital que se muestra abajo.",
     "Published cash price": "Precio en efectivo publicado",
+    # the recommendation
+    "🏆 Your best option": "🏆 Su mejor opción",
+    "Your cost (estimate)": "Su costo (estimado)",
+    "Cash price here": "Precio en efectivo aquí",
+    "Patients say": "Opinión de pacientes",
+    "How far": "Distancia",
+    "**Why this one**": "**Por qué esta opción**",
+    "🧭 Get directions": "🧭 Cómo llegar",
+    "**Two other good options**": "**Otras dos buenas opciones**",
+    "**Another good option**": "**Otra buena opción**",
+    "🥈 Second choice": "🥈 Segunda opción",
+    "🥉 Third choice": "🥉 Tercera opción",
+    "**The numbers behind it**": "**Las cifras detrás**",
+    "📝 Questions to ask the hospital before you go": "📝 Preguntas para hacer al hospital antes de ir",
+    "- Is this the total price, or will there be separate bills, such as a doctor's fee?\n"
+    "- Are you in my insurance plan's network for this service?\n"
+    "- What will I owe on the day, and can I pay in instalments?\n"
+    "- If I pay myself, is there a discount or financial assistance I can apply for?\n"
+    "- Do I need a referral or prior approval from my insurer?":
+        "- ¿Es este el precio total, o habrá facturas aparte, como los honorarios del médico?\n"
+        "- ¿Están en la red de mi plan de seguro para este servicio?\n"
+        "- ¿Cuánto deberé pagar ese día, y puedo pagar en cuotas?\n"
+        "- Si pago por mi cuenta, ¿hay algún descuento o ayuda financiera que pueda solicitar?\n"
+        "- ¿Necesito una remisión o autorización previa de mi aseguradora?",
+    "- Medicare has no patient rating for it": "- Medicare no tiene calificación de pacientes para este hospital",
+    "not rated": "sin calificación",
     # table headings
     "Hospital": "Hospital",
     "Would recommend": "Lo recomendarían",
@@ -299,6 +325,38 @@ TEMPLATES = [
      "price, because the low line often covers only part of the service, such as the doctor's fee.",
      "⚠️ {n} hospital publica precios muy distintos con este mismo código. Se compara por su precio más alto, "
      "porque la línea baja suele cubrir solo una parte del servicio, como los honorarios del médico."),
+    ("📞 Call {phone}", "📞 Llamar al {phone}"),
+    ("{stars}  {n}% recommend", "{stars}  {n}% lo recomiendan"),
+    ("{n} miles", "{n} millas"),
+    ("- What you would pay is the lowest of the {n} hospitals compared: {x}",
+     "- Lo que usted pagaría es lo más bajo de los {n} hospitales comparados: {x}"),
+    ("- The cash price is the lowest of the {n} hospitals compared: {x}",
+     "- El precio en efectivo es el más bajo de los {n} hospitales comparados: {x}"),
+    ("- What you would pay is {x} below the middle of the hospitals compared",
+     "- Lo que usted pagaría está {x} por debajo del precio medio de los hospitales comparados"),
+    ("- The cash price is {x} below the middle of the hospitals compared",
+     "- El precio en efectivo está {x} por debajo del precio medio de los hospitales comparados"),
+    ("- What you would pay is {x}, close to or above the middle ({m})",
+     "- Lo que usted pagaría es {x}, cerca o por encima del precio medio ({m})"),
+    ("- The cash price is {x}, close to or above the middle ({m})",
+     "- El precio en efectivo es {x}, cerca o por encima del precio medio ({m})"),
+    ("- Patients rate it {n} of 5 stars, and {p}% would definitely recommend it",
+     "- Los pacientes le dan {n} de 5 estrellas, y el {p}% lo recomendaría sin duda"),
+    ("- It is about {m} miles from you", "- Está a unas {m} millas de usted"),
+    ("### You pay about {x}", "### Usted paga aprox. {x}"),
+    ("### Cash price {x}", "### Precio en efectivo {x}"),
+    ("Chosen by weighing cost first, then patient rating, then distance. {rest}Children's, psychiatric, cancer "
+     "and long-term care hospitals are not suggested automatically. It is a suggestion to start from, not medical "
+     "advice.",
+     "Elegido dando más peso al costo, luego a la calificación de pacientes y luego a la distancia. {rest}Los "
+     "hospitales infantiles, psiquiátricos, oncológicos y de cuidados prolongados no se sugieren automáticamente. "
+     "Es una sugerencia para empezar, no un consejo médico."),
+    ("Chosen by weighing cost first, then patient rating. Enter your ZIP code above to take distance into account. "
+     "{rest}Children's, psychiatric, cancer and long-term care hospitals are not suggested automatically. It is a "
+     "suggestion to start from, not medical advice.",
+     "Elegido dando más peso al costo y luego a la calificación de pacientes. Ingrese su código postal arriba para "
+     "tener en cuenta la distancia. {rest}Los hospitales infantiles, psiquiátricos, oncológicos y de cuidados "
+     "prolongados no se sugieren automáticamente. Es una sugerencia para empezar, no un consejo médico."),
     ("💳 Lowest cost with {payer}", "💳 Menor costo con {payer}"),
     ("### {n}% recommend", "### {n}% lo recomiendan"),
     ("### You pay about {x}", "### Usted paga aprox. {x}"),

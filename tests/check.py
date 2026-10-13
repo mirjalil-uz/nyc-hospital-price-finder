@@ -40,13 +40,18 @@ def metric(at, label):
     return next(m.value for m in at.metric if m.label == label)
 
 
+def dollars(text):
+    return float(text.strip("$").replace(",", ""))
+
+
 def card_title(at):
     """The hospital named at the top of the details card."""
     return next(s.value[2:] for s in at.subheader if s.value.startswith("🏥 "))
 
 
 def directions_url(at):
-    return at.get("link_button")[0].proto.url
+    """The Google Maps link on the hospital's details card (the last one on the page)."""
+    return [b.proto.url for b in at.get("link_button") if "google.com/maps" in b.proto.url][-1]
 
 
 # ------------------------------------------------------------------ the app
@@ -75,12 +80,17 @@ check("price chart and map are drawn",
       len(at.get("vega_lite_chart")) == 2 and len(at.get("deck_gl_json_chart")) == 1)
 check("savings message is shown", len(at.success) == 1 and "depending on the hospital" in at.success[0].value)
 details = [b for b in at.button if b.label == "See details"]
-check("three suggestion cards", len(details) == 3, len(details))
-details[1].click().run()
-check("a suggestion card opens the cheapest hospital",
-      next(s for s in at.selectbox if s.label == "Hospital").value
-      == next(m.delta for m in at.metric if m.label == "Lowest cash price") == card_title(at),
-      card_title(at))
+recommended = next(s.value[2:] for s in at.subheader if s.value.startswith("🏆 "))
+check("one best option is recommended, with two alternatives", len(details) == 3 and bool(recommended), recommended)
+check("a children's or other single-purpose hospital is not the automatic recommendation",
+      not any(word in recommended for word in ("Children", "Behavioral", "Calvary", "Sloan Kettering")), recommended)
+check("the recommendation explains itself and gives next steps",
+      sum(m.value.startswith("- ") for m in at.markdown) >= 2
+      and any("Questions to ask the hospital" in e.label for e in at.expander)
+      and any(b.proto.url.startswith("tel:+1") for b in at.get("link_button")))
+next(b for b in at.button if b.key == "recommended").click().run()
+check("the recommendation's button opens that hospital's details",
+      next(s for s in at.selectbox if s.label == "Hospital").value == recommended == card_title(at), card_title(at))
 all_count = int(metric(at, "Hospitals with a price"))
 hospital_box = next(s for s in at.selectbox if s.label == "Hospital")
 check("hospital list matches the count", len(hospital_box.options) == all_count)
@@ -90,6 +100,8 @@ check("phone number is shown", any("📞" in m.value and "tel:+1" in m.value for
 check("directions link points to Google Maps with the hospital as destination",
       directions_url(at).startswith("https://www.google.com/maps/dir/?api=1&destination=")
       and first.split()[0] in directions_url(at), directions_url(at)[:110])
+ranked_cash = [dollars(m.value) for m in at.metric if m.label == "Cash price here"]
+check("without insurance the recommendation is based on the cash price", len(ranked_cash) == 1, ranked_cash)
 
 other = hospital_box.options[5]
 hospital_box.select(other).run()
@@ -275,9 +287,8 @@ next(b for b in at.button if b.label == "Chest X-ray").click().run()
 pays = [dollars(v.split(" ")[0]) for v, c in zip(at.dataframe[0].value["You pay (estimate)"],
                                                   at.dataframe[0].value["Covered?"]) if c.startswith("Yes")]
 middle = sorted(pays)[len(pays) // 2]
-suggested = next(dollars(m.value.replace("\\", "").split("about ")[1]) for m in at.markdown
-                 if m.value.startswith("### You pay about"))
-check("a price far below every other hospital's is kept out of the suggestions",
+suggested = dollars(metric(at, "Your cost (estimate)"))
+check("a price far below every other hospital's is never the recommendation",
       suggested >= middle * 0.1, f"suggested ${suggested:,.0f}, middle ${middle:,.0f}")
 any_plan = at.dataframe[0].value["Aetna agreed price"].tolist()
 box("What kind of Aetna plan do you have?").select("Medicare Advantage").run()
