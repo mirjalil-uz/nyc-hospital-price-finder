@@ -746,12 +746,11 @@ def landing_sections():
     """What a first-time visitor sees under the steps: the numbers, how it works and the questions."""
     totals = query(
         """SELECT (SELECT count(*) FROM hospitals WHERE has_prices) AS loaded,
-                  (SELECT count(*) FROM hospitals) AS hospitals,
                   (SELECT count(*) FROM rates) AS prices,
                   (SELECT count(*) FROM procedures) AS services"""
     ).iloc[0]
     stat = st.container(key="stats").columns(4)
-    stat[0].metric("Hospitals", f"{int(totals.loaded)} of {int(totals.hospitals)}")
+    stat[0].metric("Hospitals", f"{int(totals.loaded)}")
     stat[1].metric("Insurance prices", f"{totals.prices / 1e6:.0f} million")
     stat[2].metric("Services to search", f"{int(totals.services):,}")
     stat[3].metric("Boroughs covered", "All 5")
@@ -1367,7 +1366,7 @@ with st.expander("🗂️ Where does the data come from?"):
            FROM hospitals h LEFT JOIN files f USING (file_id) ORDER BY h.has_prices, h.hospital"""
     )
     st.write(
-        f"{int(files.has_prices.sum())} of {len(files)} New York City hospitals are loaded. "
+        f"{int(files.has_prices.sum())} New York City hospitals are loaded. "
         "Each hospital's file is downloaded from the address it publishes in its own `cms-hpt.txt` index, "
         "as required by the federal Hospital Price Transparency rule. Prices are shown exactly as published; "
         "missing prices are left blank, never estimated. Ratings come from Medicare's patient survey, addresses "
