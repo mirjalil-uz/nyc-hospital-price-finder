@@ -2,6 +2,10 @@
 
 Compare what New York City hospitals charge for the same care.
 
+![The NYC Hospital Price Finder home page](docs/home.png)
+
+![The recommended hospital for a chest X-ray, with its cash price, patient rating and the reasons for the pick](docs/recommendation.png)
+
 U.S. hospitals are required to publish their prices, but each one posts a huge
 file in its own layout. This project downloads the official price file of every
 general hospital in the five boroughs, converts them all to one structure,
