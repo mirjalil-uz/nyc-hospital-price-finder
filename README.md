@@ -114,3 +114,7 @@ browser from the addresses in `data/registry.csv` and save each one in
 - Distances are straight lines from the centre of a ZIP code.
 - Hospitals update their files on their own schedules; the app shows each file's date and marks prices over a year old.
 - Similar public tools exist, including the NYC Health Department's Health Care Price Comparison tool.
+
+## License
+
+The code is released under the [MIT License](LICENSE). The price data belongs to the hospitals that publish it.
